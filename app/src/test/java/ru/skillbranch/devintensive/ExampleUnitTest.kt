@@ -84,29 +84,6 @@ class ExampleUnitTest {
 
     @Test
     fun abstract_factory() {
-        val user = User.makeUser("Константин Салов")
-        
-        println(
-                BaseMessage.makeMessage(
-                    user,
-                    chat = Chat(id = "0"),
-                    date = Date(),
-                    payload = "url",
-                    type = "image",
-                    isIncoming = true
-                ).formatMessage()
-                )
-
-        println(
-            BaseMessage.makeMessage(
-                user,
-                chat = Chat(id = "0"),
-                date = Date(),
-                payload = "url",
-                type = "text",
-                isIncoming = false
-            ).formatMessage()
-        )
 
     }
 
