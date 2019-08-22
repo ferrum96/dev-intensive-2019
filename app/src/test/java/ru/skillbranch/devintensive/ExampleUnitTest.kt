@@ -87,10 +87,20 @@ class ExampleUnitTest {
         val user = User.makeUser("Салов Константин")
 
         var imgMessage = BaseMessage.makeMessage(user, Chat(id = "0"), payload = "какойто url", type = "image")
-        var txtMessage = BaseMessage.makeMessage(user, Chat(id = "0"), payload = "какойто текстовое сообщение", type = "text")
+        var txtMessage =
+            BaseMessage.makeMessage(user, Chat(id = "0"), payload = "какойто текстовое сообщение", type = "text")
 
 
-        println(BaseMessage.makeMessage(user,chat = Chat(id = "0"),date = Date(),payload = "sgdfg",type = "image",isIncoming = true))
+        println(
+            BaseMessage.makeMessage(
+                user,
+                chat = Chat(id = "0"),
+                date = Date(),
+                payload = "sgdfg",
+                type = "image",
+                isIncoming = true
+            )
+        )
 
     }
 
@@ -121,7 +131,7 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun truncate(){
+    fun truncate() {
         println("Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate())
         println("Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate(15))
         println("A     ".truncate(3))
@@ -147,13 +157,33 @@ class ExampleUnitTest {
 
 
     @Test
-    fun plural(){
-        println(TimeUnits.SECOND.plural(1) )
-        println(TimeUnits.MINUTE.plural(4) )
-        println(TimeUnits.HOUR.plural(19) )
+    fun plural() {
+        println(TimeUnits.SECOND.plural(1))
+        println(TimeUnits.MINUTE.plural(4))
+        println(TimeUnits.HOUR.plural(19))
         println(TimeUnits.DAY.plural(222))
     }
+
+    @Test
+    fun build() {
+        val date = Date()
+        val expectedUser = User("1", "Михаил", "Макеев", "anyUrl", 10, 10, date, true)
+        val user = User.Builder()
+            .id("1")
+            .firstName("Михаил")
+            .lastName("Макеев")
+            .avatar("anyUrl")
+            .rating(10)
+            .respect(10)
+            .lastVisit(date)
+            .isOnline(true)
+            .build()
+
+        assertEquals(expectedUser, user)
+
+    }
 }
+
 
 
 
