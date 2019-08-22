@@ -6,30 +6,48 @@ abstract class BaseMessage(
     val id: String,
     val from: User?,
     val chat: Chat,
-    var isInocming: Boolean = false,
+    var isIncoming: Boolean = false,
     val date: Date = Date()
 ) {
+
     abstract fun formatMessage(): String
 
     companion object AbstractFactory {
-        var lastId = -1
+        var lastId = 0
         fun makeMessage(
             from: User?,
             chat: Chat,
             date: Date = Date(),
+            payload: Any,
             type: String = "text",
-            payload: Any?
+            isIncoming: Boolean = false
         ): BaseMessage {
-            lastId++
             return when (type) {
                 "image" -> ImageMessage(
-                    "$lastId",
+                    "${lastId++}",
                     from,
                     chat,
                     date = date,
-                    image = payload as String
+                    image = payload as String,
+                    isIncoming = isIncoming
                 )
-                else -> TextMessage("$lastId", from, chat, date = date, text = payload as String)
+                "text" -> TextMessage(
+                    "${lastId++}",
+                    from,
+                    chat,
+                    date = date,
+                    text = payload as String,
+                    isIncoming = isIncoming
+                )
+
+                else -> if ("image" == payload || "text" == payload) makeMessage(
+                    from,
+                    chat,
+                    date,
+                    payload,
+                    type,
+                    isIncoming
+                ) else throw IllegalArgumentException()
             }
         }
     }

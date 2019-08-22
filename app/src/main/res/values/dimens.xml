@@ -11,4 +11,9 @@
     <dimen name="spasing_small_8">8dp</dimen>
     <dimen name="spasing_tiny_4">4dp</dimen>
 
+    <dimen name="image_button_size_small_8">8dp</dimen>
+    <dimen name="image_button_size_normal_16">16dp</dimen>
+    <dimen name="image_button_size_large_24">24dp</dimen>
+    <dimen name="image_button_size_huge_32">32dp</dimen>
+
 </resources>

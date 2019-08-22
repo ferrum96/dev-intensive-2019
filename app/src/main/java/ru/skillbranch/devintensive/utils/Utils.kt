@@ -1,5 +1,7 @@
 package ru.skillbranch.devintensive.utils
 
+import ru.skillbranch.devintensive.extensions.TimeUnits
+
 
 object Utils {
     fun parseFullName(fullName: String?): Pair<String?, String?> {
@@ -34,86 +36,73 @@ object Utils {
             .takeIf { it.isNotEmpty() }
     }
 
-        fun cyrTolat(ch: Char): String {
-            when (ch) {
-                'а' -> return "a"
-                'б' -> return "b"
-                'в' -> return "v"
-                'г' -> return "g"
-                'д' -> return "d"
-                'е' -> return "e"
-                'ё' -> return "e"
-                'ж' -> return "zh"
-                'з' -> return "z"
-                'и' -> return "i"
-                'й' -> return "i"
-                'к' -> return "k"
-                'л' -> return "l"
-                'м' -> return "m"
-                'н' -> return "n"
-                'о' -> return "o"
-                'п' -> return "p"
-                'р' -> return "r"
-                'с' -> return "s"
-                'т' -> return "t"
-                'у' -> return "u"
-                'ф' -> return "f"
-                'х' -> return "h"
-                'ц' -> return "c"
-                'ч' -> return "ch"
-                'ш' -> return "sh"
-                'щ' -> return "sh'"
-                'ъ' -> return ""
-                'ы' -> return "i"
-                'ь' -> return ""
-                'э' -> return "e"
-                'ю' -> return "yu"
-                'я' -> return "ya"
-                'А' -> return "A"
-                'Б' -> return "B"
-                'В' -> return "V"
-                'Г' -> return "G"
-                'Д' -> return "D"
-                'Е' -> return "E"
-                'Ё' -> return "E"
-                'Ж' -> return "ZH"
-                'З' -> return "Z"
-                'И' -> return "I"
-                'Й' -> return "I"
-                'К' -> return "K"
-                'Л' -> return "L"
-                'М' -> return "M"
-                'Н' -> return "N"
-                'О' -> return "O"
-                'П' -> return "P"
-                'Р' -> return "R"
-                'С' -> return "S"
-                'Т' -> return "T"
-                'У' -> return "U"
-                'Ф' -> return "F"
-                'Х' -> return "H"
-                'Ц' -> return "C"
-                'Ч' -> return "CH"
-                'Ш' -> return "SH"
-                'Щ' -> return "SH'"
-                'Ъ' -> return ""
-                'Ы' -> return "I"
-                'Ь' -> return ""
-                'Э' -> return "E"
-                'Ю' -> return "YU"
-                'Я' -> return "YA"
-                else -> return ch.toString()
+    fun transliteration(payload: String, divider: String = " "): String {
+        return payload.toCharArray().map{ character -> if (character.isUpperCase()) transliterateCharacter(character.toLowerCase()).capitalize() else transliterateCharacter(character) }.joinToString("").replace(" ", divider)
+    }
+
+    private fun transliterateCharacter(character: Char): String = when (character) {
+        'а' -> "a"
+        'б' -> "b"
+        'в' -> "v"
+        'г' -> "g"
+        'д' -> "d"
+        'е' -> "e"
+        'ё' -> "e"
+        'ж' -> "zh"
+        'з' -> "z"
+        'и' -> "i"
+        'й' -> "i"
+        'к' -> "k"
+        'л' -> "l"
+        'м' -> "m"
+        'н' -> "n"
+        'о' -> "o"
+        'п' -> "p"
+        'р' -> "r"
+        'с' -> "s"
+        'т' -> "t"
+        'у' -> "u"
+        'ф' -> "f"
+        'х' -> "h"
+        'ц' -> "c"
+        'ч' -> "ch"
+        'ш' -> "sh"
+        'щ' -> "sh'"
+        'ъ' -> ""
+        'ы' -> "i"
+        'ь' -> ""
+        'э' -> "e"
+        'ю' -> "yu"
+        'я' -> "ya"
+        else -> character.toString()
+    }
+
+    fun plurals(i: Int, timeunit: TimeUnits): String {
+
+        val j = i % 10
+
+        return if(j in 1..1) {
+            when(timeunit) {
+                TimeUnits.SECOND ->  "$i секунду"
+                TimeUnits.MINUTE ->  "$i минуту"
+                TimeUnits.HOUR ->  "$i час"
+                TimeUnits.DAY ->  "$i день"
             }
-        }
-
-
-        fun transliteration(payload: String, divider: String = " "): String {
-
-            val sb = StringBuilder(payload.length * 2)
-            for (ch in payload.toCharArray()) {
-                sb.append(cyrTolat(ch))
+        } else if(j in 2..4) {
+            when(timeunit) {
+                TimeUnits.SECOND ->  "$i секунды"
+                TimeUnits.MINUTE ->  "$i минуты"
+                TimeUnits.HOUR ->  "$i часа"
+                TimeUnits.DAY ->  "$i дня"
             }
-            val parts = sb.toString().split(" ")
-            return parts.getOrNull(0) + divider + parts.getOrNull(1)
+        } else {
+            when(timeunit) {
+                TimeUnits.SECOND ->  "$i секунд"
+                TimeUnits.MINUTE ->  "$i минут"
+                TimeUnits.HOUR ->  "$i часов"
+                TimeUnits.DAY ->  "$i дней"
+            }
         }
     }
+
+}

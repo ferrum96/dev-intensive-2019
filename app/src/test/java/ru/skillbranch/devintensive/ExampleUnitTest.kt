@@ -2,10 +2,8 @@ package ru.skillbranch.devintensive
 
 import junit.framework.Assert.assertEquals
 import org.junit.Test
-import ru.skillbranch.devintensive.extensions.TimeUnits
-import ru.skillbranch.devintensive.extensions.add
-import ru.skillbranch.devintensive.extensions.format
-import ru.skillbranch.devintensive.extensions.toUserView
+import ru.skillbranch.devintensive.extensions.*
+
 import ru.skillbranch.devintensive.models.BaseMessage
 import ru.skillbranch.devintensive.models.Chat
 import ru.skillbranch.devintensive.models.User
@@ -92,8 +90,7 @@ class ExampleUnitTest {
         var txtMessage = BaseMessage.makeMessage(user, Chat(id = "0"), payload = "какойто текстовое сообщение", type = "text")
 
 
-        println(imgMessage.formatMessage())
-        println(txtMessage.formatMessage())
+        println(BaseMessage.makeMessage(user,chat = Chat(id = "0"),date = Date(),payload = "sgdfg",type = "image",isIncoming = true))
 
     }
 
@@ -121,6 +118,40 @@ class ExampleUnitTest {
     @Test
     fun trans() {
         print(Utils.transliteration("Вася Хуяся", "$$"))
+    }
+
+    @Test
+    fun truncate(){
+        println("Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate())
+        println("Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate(15))
+        println("A     ".truncate(3))
+        println("<p>Образовательное       IT-сообщество Skill Branch</p>".stripHtml())
+    }
+
+    @Test
+    fun test_transliteration() {
+        assertEquals("Ivan Stereotipov", Utils.transliteration("Иван Стереотипов"))
+        assertEquals("Amazing_Petr", Utils.transliteration("Amazing Петр", "_"))
+        assertEquals("Privet mir", Utils.transliteration("Привет мир"))
+        assertEquals("    Privet    mir   ", Utils.transliteration("    Привет    мир   "))
+        assertEquals("pRIvet mir", Utils.transliteration("pRIвет мир"))
+        assertEquals("PRIvet Mir", Utils.transliteration("PRIвет Mир"))
+        assertEquals("PRIvet1345 Mir", Utils.transliteration("PRIвет1345 Mир"))
+        assertEquals("[]{}PRIvet Mir/", Utils.transliteration("[]{}PRIвет Mир/"))
+        assertEquals("[]{}PRIvet____Mir/", Utils.transliteration("[]{}PRIвет    Mир/", "_"))
+        assertEquals(
+            "[_444__444__444__444_]{}PRIvet_444__444_Mir/",
+            Utils.transliteration("[    ]{}PRIвет  Mир/", "_444_")
+        )
+    }
+
+
+    @Test
+    fun plural(){
+        println(TimeUnits.SECOND.plural(1) )
+        println(TimeUnits.MINUTE.plural(4) )
+        println(TimeUnits.HOUR.plural(19) )
+        println(TimeUnits.DAY.plural(222))
     }
 }
 
