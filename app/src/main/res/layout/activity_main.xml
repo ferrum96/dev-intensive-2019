@@ -43,10 +43,13 @@
                 android:textColor="@color/color_gray_light"
                 android:textColorHint="@color/color_gray_light"
                 android:hint="Введите текст"
+                android:imeOptions="actionDone"
+                android:imeActionLabel="Done"
                 android:paddingTop="@dimen/spasing_normal_16"
                 android:paddingBottom="@dimen/spasing_normal_16"
                 android:layout_marginLeft="@dimen/spasing_normal_16"
                 android:layout_marginRight="@dimen/spasing_normal_16"
+                android:singleLine="true"
         />
 
         <ImageView
