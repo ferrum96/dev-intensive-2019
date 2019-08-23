@@ -5,6 +5,7 @@ import org.junit.Test
 import ru.skillbranch.devintensive.extensions.*
 
 import ru.skillbranch.devintensive.models.BaseMessage
+import ru.skillbranch.devintensive.models.Bender
 import ru.skillbranch.devintensive.models.Chat
 import ru.skillbranch.devintensive.models.User
 import ru.skillbranch.devintensive.utils.Utils
@@ -84,6 +85,29 @@ class ExampleUnitTest {
 
     @Test
     fun abstract_factory() {
+        val user = User.makeUser("Константин Салов")
+        
+        println(
+                BaseMessage.makeMessage(
+                    user,
+                    chat = Chat(id = "0"),
+                    date = Date(),
+                    payload = "url",
+                    type = "image",
+                    isIncoming = true
+                ).formatMessage()
+                )
+
+        println(
+            BaseMessage.makeMessage(
+                user,
+                chat = Chat(id = "0"),
+                date = Date(),
+                payload = "url",
+                type = "text",
+                isIncoming = false
+            ).formatMessage()
+        )
 
     }
 
@@ -164,6 +188,12 @@ class ExampleUnitTest {
 
         assertEquals(expectedUser, user)
 
+    }
+
+    @Test
+    fun bender(){
+        val benderObj = Bender(Bender.Status.valueOf(Bender.Status.NORMAL.toString()), Bender.Question.valueOf(Bender.Question.NAME.toString()))
+        print(benderObj.listenAnswer("Bender"))
     }
 }
 
