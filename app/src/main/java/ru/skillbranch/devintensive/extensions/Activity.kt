@@ -2,10 +2,14 @@ package ru.skillbranch.devintensive.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 
-//fun Activity.hideKeyboard(){
-//    if (currentFocus != null) {
-//        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)
-//        imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
-//}
+fun Activity.hideKeyboard() {
+    hideKeyboard(if (currentFocus == null) View(this) else currentFocus)
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}
