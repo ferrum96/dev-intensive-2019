@@ -12,18 +12,58 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
-        return if (question.answers.contains(answer)) {
-            question = question.nextQuestion()
-            "Отлично - ты справился\n${question.question}" to status.color
-        } else {
-            if (status == Status.CRITICAL) {
-                status = Status.NORMAL
-                question = Question.NAME
-                "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+        if (validationAnswer(answer) == "") {
+            return if (question.answers.contains(answer)) {
+                question = question.nextQuestion()
+                "Отлично - ты справился\n${question.question}" to status.color
             } else {
-                status = status.nextStatus()
-                "Это неправильный ответ\n${question.question}" to status.color
+                if (status == Status.CRITICAL) {
+                    status = Status.NORMAL
+                    question = Question.NAME
+                    "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+                } else {
+                    status = status.nextStatus()
+                    "Это неправильный ответ\n${question.question}" to status.color
+                }
             }
+        } else {
+            return "${validationAnswer(answer)}\n${question.question}" to status.color
+        }
+    }
+
+    private fun validationAnswer(answer: String): String {
+        return when (question) {
+            Question.NAME ->
+                if (answer.isNotEmpty() && answer[0].isUpperCase()) {
+                    ""
+                } else {
+                    "Имя должно начинаться с заглавной буквы"
+                }
+            Question.PROFESSION ->
+                if (answer.isNotEmpty() && answer[0].isLowerCase()) {
+                    ""
+                } else {
+                    "Профессия должна начинаться со строчной буквы"
+                }
+            Question.MATERIAL ->
+                if (!answer.contains(Regex("\\d+"))) {
+                    ""
+                } else {
+                    "Материал не должен содержать цифр"
+                }
+            Question.BDAY ->
+                if (!answer.contains(Regex("\\D+"))) {
+                    ""
+                } else {
+                    "Год моего рождения должен содержать только цифры"
+                }
+            Question.SERIAL ->
+                if (answer.length == 7 && !answer.contains(Regex("\\D+"))) {
+                    ""
+                } else {
+                    "Серийный номер содержит только цифры, и их 7"
+                }
+            Question.IDLE -> ""
         }
     }
 
@@ -40,14 +80,13 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 values()[0]
             }
         }
-
     }
 
     enum class Question(val question: String, val answers: List<String>) {
-        NAME("Как меня зовут?", listOf("бендер", "bender", "Bender", "Бендер")) {
+        NAME("Как меня зовут?", listOf("Bender", "бендер")) {
             override fun nextQuestion(): Question = PROFESSION
         },
-        PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender", "Cгибальщик", "Bender")) {
+        PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
             override fun nextQuestion(): Question = MATERIAL
         },
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
@@ -64,8 +103,5 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         };
 
         abstract fun nextQuestion(): Question
-
     }
-
-
 }
