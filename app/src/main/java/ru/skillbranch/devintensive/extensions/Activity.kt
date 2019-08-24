@@ -17,8 +17,8 @@ fun Context.hideKeyboard(view: View) {
 
 fun Activity.isKeyboardOpen(view: View): Boolean {
     val rect = Rect()
-    v.getWindowVisibleDisplayFrame(rect)
-    val heightDiff: Int = v.rootView.height - (rect.bottom - rect.top)
+    view.getWindowVisibleDisplayFrame(rect)
+    val heightDiff: Int = view.rootView.height - (rect.bottom - rect.top)
     return heightDiff > 100
 }
 
