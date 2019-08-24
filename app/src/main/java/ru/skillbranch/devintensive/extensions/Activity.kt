@@ -15,7 +15,7 @@ fun Context.hideKeyboard(view: View) {
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun Activity.isKeyboardOpen(v: View): Boolean {
+fun Activity.isKeyboardOpen(view: View): Boolean {
     val rect = Rect()
     v.getWindowVisibleDisplayFrame(rect)
     val heightDiff: Int = v.rootView.height - (rect.bottom - rect.top)
