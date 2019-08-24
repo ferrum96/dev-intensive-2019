@@ -22,4 +22,4 @@ fun Activity.isKeyboardOpen(view: View): Boolean {
     return heightDiff > 100
 }
 
-fun Activity.isKeyboardClosed(view: View): Boolean = !this.isKeyboardOpen(v)
+fun Activity.isKeyboardClosed(view: View): Boolean = !this.isKeyboardOpen(view)
