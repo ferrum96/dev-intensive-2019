@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 
+
 fun Activity.hideKeyboard() {
     hideKeyboard(if (currentFocus == null) View(this) else currentFocus)
 }
@@ -16,12 +17,14 @@ fun Context.hideKeyboard(view: View) {
 }
 
 fun Activity.isKeyboardOpen(): Boolean {
+
     val rootView = findViewById<View>(android.R.id.content)
     val visibleBorders = Rect()
-    rootView.getWindowVisibleDisplayFrame(Rect())
-    val heightDifference = rootView.height - visibleBorders.height()
 
-    return heightDifference > 100
+    rootView.getWindowVisibleDisplayFrame(visibleBorders)
+
+    val heightDiff = rootView.getRootView().getHeight() - (visibleBorders.bottom - visibleBorders.top);
+    return heightDiff > 100
 }
 
 fun Activity.isKeyboardClosed(): Boolean {
