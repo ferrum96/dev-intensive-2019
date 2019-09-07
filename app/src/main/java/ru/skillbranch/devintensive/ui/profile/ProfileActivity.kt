@@ -4,6 +4,7 @@ import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -26,6 +27,7 @@ class ProfileActivity : AppCompatActivity() {
     lateinit var viewFields: Map<String, TextView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("M_ProfileActivity","onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
@@ -39,7 +41,14 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initViewModel(){
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-        viewModel.getProfileDate().observe(this, Observer { updateUI(it) })
+        viewModel.getProfileData().observe(this, Observer { updateUI(it) })
+        viewModel.getTheme().observe(this, Observer { updateTheme(it) })
+
+    }
+
+    private fun updateTheme(mode: Int) {
+        Log.d("M_ProfileActivity","updateTheme")
+        delegate.setLocalNightMode(mode)
     }
 
     private fun updateUI(profile: Profile) {
@@ -59,7 +68,7 @@ class ProfileActivity : AppCompatActivity() {
             "lastName" to et_last_name,
             "about" to et_about,
             "repository" to et_repository,
-            "raiting" to tv_raiting,
+            "raiting" to tv_rating,
             "respect" to tv_respect
         )
 
@@ -70,6 +79,10 @@ class ProfileActivity : AppCompatActivity() {
             if(isEditMode) saveProfileInfo()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
+        })
+
+        btn_switch_theme.setOnClickListener(View.OnClickListener {
+            viewModel.switchTheme()
         })
     }
 
@@ -113,9 +126,9 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             val icon = if (isEdit) {
-                resources.getDrawable(R.drawable.ic_save_black_24dp)
+                resources.getDrawable(R.drawable.ic_save_black_24dp, theme)
             } else {
-                resources.getDrawable(R.drawable.ic_edit_black_24dp)
+                resources.getDrawable(R.drawable.ic_edit_black_24dp,theme)
             }
 
             background.colorFilter = filter

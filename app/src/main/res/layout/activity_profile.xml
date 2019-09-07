@@ -26,6 +26,7 @@
                 android:layout_gravity="center">
 
             <ImageButton
+                    android:id="@+id/btn_switch_theme"
                     android:layout_width="@dimen/btn_round_size_40"
                     android:layout_height="@dimen/btn_round_size_40"
                     android:background="@drawable/btn_round_bg"
@@ -77,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/color_primary_light">
+            android:background="?attr/colorAccentedSurface">
 
         <LinearLayout
                 android:layout_width="0dp"
@@ -89,7 +90,7 @@
                 android:paddingBottom="@dimen/spacing_normal_16">
 
             <TextView
-                    android:id="@+id/tv_raiting"
+                    android:id="@+id/tv_rating"
                     style="@style/Profile.Metrics.Value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -195,9 +196,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/space_maximum_72"
-            android:background="@color/color_divider_dark">
-
-    </View>
+            android:background="?attr/colorDivider"/>
 
     <LinearLayout
             style="@style/Profile.InfoItem"
