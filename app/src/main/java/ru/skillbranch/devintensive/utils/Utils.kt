@@ -1,5 +1,7 @@
 package ru.skillbranch.devintensive.utils
 
+import android.content.res.Resources
+import android.util.DisplayMetrics
 import ru.skillbranch.devintensive.extensions.TimeUnits
 
 
@@ -13,9 +15,11 @@ object Utils {
         if (fullName != null) {
             if (fullName.contains(" ")) {
                 parts = fullName.split(" ")
-                if ((parts.getOrNull(0) != "") && (parts.getOrNull(0) != " ")) firstName = parts.getOrNull(0) else firstName =
+                if ((parts.getOrNull(0) != "") && (parts.getOrNull(0) != " ")) firstName =
+                    parts.getOrNull(0) else firstName =
                     null
-                if ((parts.getOrNull(0) != "") && (parts.getOrNull(0) != " ")) lastName = parts.getOrNull(1) else lastName = null
+                if ((parts.getOrNull(0) != "") && (parts.getOrNull(0) != " ")) lastName =
+                    parts.getOrNull(1) else lastName = null
             } else {
                 if (fullName != "") firstName = fullName else firstName = null
                 lastName = null
@@ -37,7 +41,11 @@ object Utils {
     }
 
     fun transliteration(payload: String, divider: String = " "): String {
-        return payload.toCharArray().map{ character -> if (character.isUpperCase()) transliterateCharacter(character.toLowerCase()).capitalize() else transliterateCharacter(character) }.joinToString("").replace(" ", divider)
+        return payload.toCharArray().map { character ->
+            if (character.isUpperCase()) transliterateCharacter(character.toLowerCase()).capitalize() else transliterateCharacter(
+                character
+            )
+        }.joinToString("").replace(" ", divider)
     }
 
     private fun transliterateCharacter(character: Char): String = when (character) {
@@ -81,28 +89,39 @@ object Utils {
 
         val j = i % 10
 
-        return if(j in 1..1) {
-            when(timeunit) {
-                TimeUnits.SECOND ->  "$i секунду"
-                TimeUnits.MINUTE ->  "$i минуту"
-                TimeUnits.HOUR ->  "$i час"
-                TimeUnits.DAY ->  "$i день"
+        return if (j in 1..1) {
+            when (timeunit) {
+                TimeUnits.SECOND -> "$i секунду"
+                TimeUnits.MINUTE -> "$i минуту"
+                TimeUnits.HOUR -> "$i час"
+                TimeUnits.DAY -> "$i день"
             }
-        } else if(j in 2..4) {
-            when(timeunit) {
-                TimeUnits.SECOND ->  "$i секунды"
-                TimeUnits.MINUTE ->  "$i минуты"
-                TimeUnits.HOUR ->  "$i часа"
-                TimeUnits.DAY ->  "$i дня"
+        } else if (j in 2..4) {
+            when (timeunit) {
+                TimeUnits.SECOND -> "$i секунды"
+                TimeUnits.MINUTE -> "$i минуты"
+                TimeUnits.HOUR -> "$i часа"
+                TimeUnits.DAY -> "$i дня"
             }
         } else {
-            when(timeunit) {
-                TimeUnits.SECOND ->  "$i секунд"
-                TimeUnits.MINUTE ->  "$i минут"
-                TimeUnits.HOUR ->  "$i часов"
-                TimeUnits.DAY ->  "$i дней"
+            when (timeunit) {
+                TimeUnits.SECOND -> "$i секунд"
+                TimeUnits.MINUTE -> "$i минут"
+                TimeUnits.HOUR -> "$i часов"
+                TimeUnits.DAY -> "$i дней"
             }
         }
+    }
+
+
+    fun convertPxToDp(px: Int): Int {
+        return Math.round(px / (Resources.getSystem().displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
+    }
+
+    fun convertDpToPx(dp: Float): Int {
+        val metrics = Resources.getSystem().displayMetrics
+        val px = dp * (metrics.densityDpi / 160f)
+        return Math.round(px)
     }
 
 }

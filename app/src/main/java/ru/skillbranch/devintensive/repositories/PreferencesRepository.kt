@@ -34,7 +34,7 @@ object PreferencesRepository {
             putValue(LAST_NAME to lastName)
             putValue(ABOUT to about)
             putValue(REPOSITORY to repository)
-            putValue(RATING to raiting)
+            putValue(RATING to rating)
             putValue(RESPECT to respect)
         }
     }
