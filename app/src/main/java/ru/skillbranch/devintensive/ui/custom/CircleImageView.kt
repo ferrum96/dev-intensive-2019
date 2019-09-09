@@ -1,21 +1,25 @@
 package ru.skillbranch.devintensive.ui.custom
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.drawToBitmap
+import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.activity_profile.view.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.utils.Utils
 import kotlin.math.min
 
 
-class CircleImageView(context: Context, attrs: AttributeSet? = null) : ImageView(context, attrs) {
+open class CircleImageView(context: Context, attrs: AttributeSet? = null) : ImageView(context, attrs) {
 
 
     companion object {
@@ -130,5 +134,29 @@ class CircleImageView(context: Context, attrs: AttributeSet? = null) : ImageView
 
         return bitmap
     }
+
+
+    fun generateAvatar(text: String, theme: Resources.Theme) {
+        // ascent() is negative
+//        val width = (paint.measureText(text) + 0.5f).toInt() // round
+//        val height = (baseline + paint.descent() + 0.5f).toInt()
+        this.post{
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.textSize = width.toFloat() * 0.4f
+            paint.color = Color.WHITE
+            paint.textAlign = Paint.Align.CENTER
+            val baseline = height*0.5f - (paint.descent()+paint.ascent())*0.5f
+            val image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(image)
+            val typedValue = TypedValue()
+            theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
+            @ColorInt val color = typedValue.data
+            canvas.drawColor(color)
+            canvas.drawText(text, width.toFloat()/2, baseline, paint)
+            setImageBitmap(image)
+        }
+
+    }
+
 
 }

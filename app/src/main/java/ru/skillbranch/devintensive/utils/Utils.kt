@@ -1,8 +1,16 @@
 package ru.skillbranch.devintensive.utils
 
+import android.content.Context
 import android.content.res.Resources
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
+import android.util.TypedValue
+import androidx.annotation.Dimension
+import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.TimeUnits
+
 
 
 object Utils {
@@ -123,5 +131,36 @@ object Utils {
         val px = dp * (metrics.densityDpi / 160f)
         return Math.round(px)
     }
+
+
+    fun generateAvatar(context: Context, @Dimension size: Int, initials: String): Drawable {
+        val bgPaint = Paint()
+        val value = TypedValue()
+
+        context.theme.resolveAttribute(R.attr.colorAccent, value, true)
+        bgPaint.color = value.data
+        bgPaint.style = Paint.Style.FILL
+
+
+        val textSize = convertDpToPx((size * 0.5f))
+        val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        textPaint.textSize = textSize.toFloat()
+        textPaint.color = Color.WHITE
+        textPaint.textAlign = Paint.Align.CENTER
+        textPaint.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+
+        val width = convertDpToPx(size.toFloat())
+        val image = Bitmap.createBitmap(width.toInt(), width.toInt(), Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(image)
+
+        canvas.drawCircle(width / 2f, width / 2f, width / 2f, bgPaint)
+        canvas.drawText(initials, 0, initials.length, width / 2f,
+            width / 2f - ((textPaint.descent() + textPaint.ascent()) / 2f), textPaint)
+
+        return BitmapDrawable(context.resources, image)
+    }
+
+
 
 }

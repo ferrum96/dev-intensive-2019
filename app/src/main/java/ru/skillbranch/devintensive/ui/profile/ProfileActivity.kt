@@ -1,9 +1,12 @@
 package ru.skillbranch.devintensive.ui.profile
 
+import android.content.res.Resources
 import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -14,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -25,14 +29,16 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var viewModel: ProfileViewModel
     var isEditMode = false
     lateinit var viewFields: Map<String, TextView>
+    //val initial = Utils.toInitials(firstName = et_first_name.toString(), lastName = et_last_name.toString())
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("M_ProfileActivity","onCreate")
         setTheme(R.style.AppTheme)
-        setContentView(R.layout.activity_profile)
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
         initViewModel()
+        Log.d("M_ProfileActivity", "onCreate")
+
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -40,7 +46,7 @@ class ProfileActivity : AppCompatActivity() {
         outState?.putBoolean(IS_EDIT_MODE, isEditMode)
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         viewModel.getProfileData().observe(this, Observer { updateUI(it) })
         viewModel.getTheme().observe(this, Observer { updateTheme(it) })
@@ -48,13 +54,13 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateTheme(mode: Int) {
-        Log.d("M_ProfileActivity","updateTheme")
+        Log.d("M_ProfileActivity", "updateTheme")
         delegate.setLocalNightMode(mode)
     }
 
     private fun updateUI(profile: Profile) {
-        profile.toMap().also{
-            for ((k,v) in viewFields ){
+        profile.toMap().also {
+            for ((k, v) in viewFields) {
                 v.text = it[k].toString()
             }
         }
@@ -73,11 +79,30 @@ class ProfileActivity : AppCompatActivity() {
             "respect" to tv_respect
         )
 
-        isEditMode = savedInstanceState?.getBoolean(IS_EDIT_MODE,false) ?: false
+        isEditMode = savedInstanceState?.getBoolean(IS_EDIT_MODE, false) ?: false
         showCurrentMode(isEditMode)
 
+        et_repository.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                p0?.let {
+                    val isError = it.isNotEmpty() && isRepositoryValid(it.toString())
+                    wr_repository.isErrorEnabled = isError
+                    wr_repository.error = if (isError) "Невалидный адрес репозитория" else null
+                }
+            }
+
+        })
+
+
+
         btn_edit.setOnClickListener(View.OnClickListener {
-            if(isEditMode) saveProfileInfo()
+            if (isEditMode) saveProfileInfo()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
         })
@@ -87,7 +112,7 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
-    private fun saveProfileInfo(){
+    private fun saveProfileInfo() {
         Profile(
             firstName = et_first_name.text.toString(),
             lastName = et_last_name.text.toString(),
@@ -129,16 +154,46 @@ class ProfileActivity : AppCompatActivity() {
             val icon = if (isEdit) {
                 resources.getDrawable(R.drawable.ic_save_black_24dp, theme)
             } else {
-                resources.getDrawable(R.drawable.ic_edit_black_24dp,theme)
+                resources.getDrawable(R.drawable.ic_edit_black_24dp, theme)
             }
 
             background.colorFilter = filter
             setImageDrawable(icon)
         }
 
-
-
-
     }
+
+    private fun isRepositoryValid(repoText: String): Boolean {
+        val regexStr = "^(https:\\/\\/)?(www\\.)?(github\\.com\\/)(?!(${getRegexExceptions()})(?=\\/|\$))[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}(\\/)?$"
+        val regex = Regex(regexStr)
+
+        return (repoText.isNotEmpty() && !regex.matches(repoText))
+    }
+
+    private fun getRegexExceptions(): String {
+        val exceptions = arrayOf(
+            "enterprise", "features", "topics", "collections", "trending", "events", "marketplace", "pricing",
+            "nonprofit", "customer-stories", "security", "login", "join"
+        )
+        return exceptions.joinToString("|")
+    }
+
+    val exclusions = listOf(
+        "enterprise",
+        "features",
+        "topics",
+        "collections",
+        "trending",
+        "events",
+        "marketplace",
+        "pricing",
+        "nonprofit",
+        "customer-stories",
+        "security",
+        "login",
+        "join"
+    )
 }
+
+
 
